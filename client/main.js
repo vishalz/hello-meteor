@@ -5,8 +5,7 @@ import {Tracker} from 'meteor/tracker';
 import {Players} from './../imports/api/players';
 
 
-const renderPlayer = function(playerList){
-  
+const renderPlayer = (playerList) => {
   return playerList.map((player)=>{
     return <p key={player._id}>Player {player.name} has {player.score} point(s)</p> ;
   });
@@ -14,8 +13,9 @@ const renderPlayer = function(playerList){
 };//end of renderPlayer
 
 
-const handlePlayer = function(e){
+const handlePlayer = (e) => {
   let playerName = e.target.playerName.value;
+  e.preventDefault();
   console.log('Player Name = ', playerName);
   if(playerName){
     e.target.playerName.value = "";
@@ -23,19 +23,15 @@ const handlePlayer = function(e){
     player.name = playerName;
     player.score = 0;
     Players.insert(player);
-  
-  } 
-  
-  e.preventDefault();
 
-
+  }
 
 };//end of handlePlayer
 
 Meteor.startup(()=>{
- 
+
   Tracker.autorun(()=>{
-	  
+
     let players = Players.find().fetch();
     console.log('Players from DB', players);
     let jsx = (
@@ -46,16 +42,13 @@ Meteor.startup(()=>{
 	      <form onSubmit={handlePlayer}>
 	        <input id='playerName' type='text' placeholder='Player Name'></input>
 	        <button>Click Me</button>
-	
 	      </form>
-	
-	
 	    </div>
 	  );
-  
+
     ReactDOM.render(jsx,document.getElementById('app'));
-  
+
   });//end of Tracker.autorun
 
- 
+
 });//end of Meteor.startup
