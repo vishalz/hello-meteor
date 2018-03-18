@@ -1,22 +1,61 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Meteor} from 'meteor/meteor';
+import {Tracker} from 'meteor/tracker';
+import {Players} from './../imports/api/players';
 
-import './main.html';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
-});
+const renderPlayer = function(playerList){
+  
+  return playerList.map((player)=>{
+    return <p key={player._id}>Player {player.name} has {player.score} point(s)</p> ;
+  });
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+};//end of renderPlayer
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
-});
+
+const handlePlayer = function(e){
+  let playerName = e.target.playerName.value;
+  console.log('Player Name = ', playerName);
+  if(playerName){
+    e.target.playerName.value = "";
+    let player = {};
+    player.name = playerName;
+    player.score = 0;
+    Players.insert(player);
+  
+  } 
+  
+  e.preventDefault();
+
+
+
+};//end of handlePlayer
+
+Meteor.startup(()=>{
+ 
+  Tracker.autorun(()=>{
+	  
+    let players = Players.find().fetch();
+    console.log('Players from DB', players);
+    let jsx = (
+	    <div>
+	      <p> Hello Vishal </p>
+	      <p> This is the second p </p>
+	      {renderPlayer(players)}
+	      <form onSubmit={handlePlayer}>
+	        <input id='playerName' type='text' placeholder='Player Name'></input>
+	        <button>Click Me</button>
+	
+	      </form>
+	
+	
+	    </div>
+	  );
+  
+    ReactDOM.render(jsx,document.getElementById('app'));
+  
+  });//end of Tracker.autorun
+
+ 
+});//end of Meteor.startup
