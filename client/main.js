@@ -7,8 +7,21 @@ import {Players} from './../imports/api/players';
 
 const renderPlayer = (playerList) => {
   return playerList.map((player)=>{
-    return <p key={player._id}>Player {player.name} has {player.score} point(s)</p> ;
-  });
+    return (
+      <p key={player._id}>
+        Player {player.name} has {player.score} point(s)
+        <button onClick={()=>{
+          Players.update(player._id,{$inc : {score:1}});
+        }}>+1</button>
+
+        <button onClick={()=>{
+          Players.update(player._id,{$inc : {score:-1}});
+        }}>-1</button>
+
+        <button onClick={()=> Players.remove({_id:player._id}) }>X</button>
+      </p>
+    ); //end of JSX 
+  });//end of map
 
 };//end of renderPlayer
 
@@ -36,7 +49,7 @@ Meteor.startup(()=>{
     console.log('Players from DB', players);
     let jsx = (
 	    <div>
-	      <p> Hello Vishal </p>
+	      <h1> Hello Meteor </h1>
 	      <p> This is the second p </p>
 	      {renderPlayer(players)}
 	      <form onSubmit={handlePlayer}>
