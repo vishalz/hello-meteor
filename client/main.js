@@ -5,59 +5,30 @@ import {Tracker} from 'meteor/tracker';
 import {Players} from './../imports/api/players';
 import TitleBar from './../imports/ui/TitleBar';
 import AddPlayer from './../imports/ui/AddPlayer';
+import Player from './../imports/ui/Player';
 
 
 const renderPlayer = (playerList) => {
   return playerList.map((player)=>{
-    return (
-      <p key={player._id}>
-        Player {player.name} has {player.score} point(s)
-        <button onClick={()=>{
-          Players.update(player._id,{$inc : {score:1}});
-        }}>+1</button>
-
-        <button onClick={()=>{
-          Players.update(player._id,{$inc : {score:-1}});
-        }}>-1</button>
-
-        <button onClick={()=> Players.remove({_id:player._id}) }>X</button>
-      </p>
-    ); //end of JSX 
+    return <Player key={player._id} player={player} />
   });//end of map
 
 };//end of renderPlayer
 
 
-const handlePlayer = (e) => {
-  let playerName = e.target.playerName.value;
-  e.preventDefault();
-  console.log('Player Name = ', playerName);
-  if(playerName){
-    e.target.playerName.value = "";
-    let player = {};
-    player.name = playerName;
-    player.score = 0;
-    Players.insert(player);
-
-  }
-
-};//end of handlePlayer
 
 Meteor.startup(()=>{
 
   Tracker.autorun(()=>{
 
     let players = Players.find().fetch();
-    console.log('Players from DB', players);
+    let title = 'This is my Big Title !!!';
+    let subtitle = 'This is my subtitle ***';
     let jsx = (
 	    <div>
-	      <TitleBar/>
+	      <TitleBar title={title} subtitle={subtitle}/>
 	      {renderPlayer(players)}
-        <AddPlayer/>
-	      <form onSubmit={handlePlayer}>
-	        <input id='playerName' type='text' placeholder='Player Name'></input>
-	        <button>Click Me</button>
-	      </form>
+        <AddPlayer score={100}/>
 	    </div>
 	  );
 
