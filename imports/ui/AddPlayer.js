@@ -14,14 +14,12 @@ export default class AddPlayer extends React.Component {
     
     let playerName = e.target.playerName.value;
     e.preventDefault();
-    console.log('Player Name = ', playerName);
     if(playerName){
       e.target.playerName.value = "";
       let player = {};
       player.name = playerName;
-      player.score = this.props.score;
+      player.score = 0;
       Players.insert(player);
-
     }
   
   

@@ -18,7 +18,7 @@ export default class TitleBar extends React.Component {
 TitleBar.propTypes= {
   
   title : PropTypes.string.isRequired,
-  subtitle : PropTypes.string.isRequired,
+  subtitle : PropTypes.string 
 
 
 }; //end of TitleBar.proptypes
